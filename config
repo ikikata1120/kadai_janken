@@ -1,0 +1,7 @@
+Host github.com
+  HostName github.com
+  User t.shinmi@ikikata.co.jp
+  IdentityFile "C:\Users\ユーザー名\.ssh\id_github_ed25519" # GitHub 用の SSH 秘密鍵
+  IdentitiesOnly yes # IdentityFile で指定した秘密鍵を使用する
+  AddKeysToAgent yes # パスフレーズを設定してない場合は不要 
+  UseKeychain yes # パスフレーズを設定してない場合は不要

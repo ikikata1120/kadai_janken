@@ -1,0 +1,240 @@
+
+/* 全体 */
+body {
+  text-align: center;
+  font-size: 32px;
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  margin: 0;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ヘッダー */
+header {
+  background-color: lightblue;
+  text-align: center;
+  padding: 10px;
+}
+
+header h2 {
+  margin: 0;
+}
+
+/* フッター */
+footer {
+  background-color: lightblue;
+  text-align: center;
+  font-size: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+/* メイン */
+main {
+  padding: 20px 10px;
+}
+
+/* じゃんけんボタン */
+ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  padding: 0;
+  list-style: none;
+  height: 100px;
+}
+
+li {
+  text-align: center;
+  background-color: #FFF;
+  cursor: pointer;
+}
+
+li:hover {
+  background-color: #0066CC;
+}
+
+/* じゃんけんの手の表示 */
+.janken-area {
+  width: 100%;
+}
+
+.text,
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.text span,
+.icon span {
+  width: 200px;
+}
+
+
+/* じゃんけんの手の画像サイズを統一 */
+.janken-area .icon img {
+  height: 150px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+
+/* 勝敗・成功・失敗 */
+#judgment {
+  font-size: 50px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  min-height: 1.5em;
+}
+
+/* ハンマーとヘルメット */
+.hit-area {
+  width: 100%;
+}
+
+.hit-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 200px;
+}
+
+.hit-icon span {
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ハンマー・ヘルメットの画像 */
+.game_img {
+  height: 200px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* 成功・失敗の結果画像 */
+.result_img {
+  height: 200px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* あなた・コンピュータの文字 */
+.hit-text {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.hit-text span {
+  width: 200px;
+}
+
+/* ハンマー・ヘルメットをクリック */
+#your_turn {
+  cursor: pointer;
+}
+
+/* タイマー */
+#timer {
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  min-height: 1.5em;
+}
+
+/* もう一度対戦するボタン */
+button {
+  font-size: 32px;
+  font-family: inherit;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* スマホ画面用の設定 */
+@media screen and (max-width: 600px) {
+
+  body {
+    font-size: 18px;
+  }
+
+  header h2 {
+    font-size: 24px;
+  }
+
+  /* じゃんけんボタン */
+  ul {
+    gap: 10px;
+    height: auto;
+  }
+
+  ul img {
+    width: 90px;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* じゃんけんの手 */
+  .text span,
+  .icon span {
+    width: 45%;
+  }
+
+  .janken-area .icon img {
+    height: 100px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  /* ハンマー・ヘルメット */
+  .hit-icon span,
+  .hit-text span {
+    width: 45%;
+  }
+
+  .game_img,
+  .result_img {
+    height: 130px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  /* 勝敗判定 */
+  #judgment {
+    font-size: 36px;
+  }
+
+  /* タイマー */
+  #timer {
+    font-size: 24px;
+  }
+
+  /* リセットボタン */
+  button {
+    font-size: 20px;
+  }
+
+  footer {
+    font-size: 16px;
+  }
+}

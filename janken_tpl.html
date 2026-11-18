@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <script src="js/jquery-2.1.3.min.js"></script>
+  <link rel="stylesheet" href="css/sample.css">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+  <title>じゃんけん</title>
+</head>
+
+<body>
+
+<header>
+  <h2>叩いてかぶってジャンケンポン！</h2>
+</header>
+
+<main>
+
+  <!-- じゃんけんのボタン -->
+  <div>じゃんけんのボタンを選んでください</div>
+
+  <ul>
+    <li id="gu_btn"><img src="./gu_btn.jpg" alt="グー"></li>
+    <li id="cho_btn"><img src="./cho_btn.jpg" alt="チョキ"></li>
+    <li id="par_btn"><img src="./par_btn.jpg" alt="パー"></li>
+  </ul>
+
+  <!-- じゃんけんの手を表示 -->
+  <div class="janken-area">
+
+    <div class="text">
+      <span>あなた</span>
+      <span>コンピュータ</span>
+    </div>
+
+    <div class="icon">
+      <span id="your_hands">
+        <img src="./all_btn.jpg" alt="ジャンケン開始">
+      </span>
+
+      <span id="pc_hands">
+        <img src="./all_btn.jpg" alt="ジャンケン開始">
+      </span>
+    </div>
+
+  </div>
+
+  <!-- 勝敗・結果表示 -->
+  <p id="judgment"></p>
+
+  <!-- ハンマー・ヘルメット表示 -->
+  <div class="hit-area">
+
+    <div class="hit-icon">
+
+      <span id="your_turn">
+        <img src="./your_start.png" class="game_img" alt="あなた">
+      </span>
+
+      <span id="pc_turn">
+        <img src="./pc_start.png" class="game_img" alt="コンピュータ">
+      </span>
+
+    </div>
+
+    <div class="hit-text">
+      <span>あなた</span>
+      <span>コンピュータ</span>
+    </div>
+
+  </div>
+
+  <!-- 残り時間 -->
+  <p id="timer"></p>
+
+  <!-- リセット -->
+  <button id="reset_btn">もう一度対戦する</button>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 叩いてかぶってジャンケンポン！</p>
+</footer>
+
+
+<script>
+
+// =====================================
+// ① 変数の設定
+// =====================================
+
+// グー=1、チョキ=2、パー=3
+const gu_btn = 1;
+const cho_btn = 2;
+const par_btn = 3;
+
+// タイマーとゲーム状態の管理
+let timer_id;
+let time_left = 3;
+let game_status = "janken";  // janken, action, finished
+let action_type = "";        // win / lose
+let action_deadline = 0;
+
+
+// =====================================
+// ② じゃんけんボタンのクリック
+// =====================================
+
+$("#gu_btn").on("click", function(){
+  janken(gu_btn);
+});
+
+$("#cho_btn").on("click", function(){
+  janken(cho_btn);
+});
+
+$("#par_btn").on("click", function(){
+  janken(par_btn);
+});
+
+
+// =====================================
+// ③ じゃんけん本体
+// =====================================
+
+function janken(your_hands){
+
+  // じゃんけんを選べるときだけ実行
+  if(game_status !== "janken"){
+    return;
+  }
+
+  // コンピュータの手をランダムに決定
+  const pc_hands = Math.ceil(Math.random() * 3);
+
+  // お互いの手を表示
+  showHands(your_hands, pc_hands);
+
+
+  // あいこの場合
+  if(your_hands === pc_hands){
+
+    $("#judgment").html("あいこ");
+
+    $("#your_turn").html("あいこ");
+    $("#pc_turn").html("でしょ！？");
+
+    $("#timer").html("");
+
+    game_status = "finished";
+    return;
+  }
+
+
+  // 勝ち判定
+  const isWin =
+    (your_hands === 1 && pc_hands === 2) ||
+    (your_hands === 2 && pc_hands === 3) ||
+    (your_hands === 3 && pc_hands === 1);
+
+
+  if(isWin){
+
+    // じゃんけんに勝った場合
+    $("#judgment").html("勝ち");
+
+    // あなたにハンマー
+    $("#your_turn").html(
+      '<img src="./your_hummer.png" class="game_img" alt="ハンマー">'
+    );
+
+    // コンピュータにヘルメット
+    $("#pc_turn").html(
+      '<img src="./pc_helmet.png" class="game_img" alt="ヘルメット">'
+    );
+
+    // 5秒タイマー開始
+    startActionTimer("win");
+
+  } else {
+
+    // じゃんけんに負けた場合
+    $("#judgment").html("負け");
+
+    // あなたにヘルメット
+    $("#your_turn").html(
+      '<img src="./your_helmet.png" class="game_img" alt="ヘルメット">'
+    );
+
+    // コンピュータにハンマー
+    $("#pc_turn").html(
+      '<img src="./pc_hummer.png" class="game_img" alt="ハンマー">'
+    );
+
+    // 5秒タイマー開始
+    startActionTimer("lose");
+
+  }
+
+}
+
+
+// =====================================
+// ④ じゃんけんの手を表示
+// =====================================
+
+function showHands(your_hands, pc_hands){
+
+  const hands_img = {
+    1: "./gu_btn.jpg",
+    2: "./cho_btn.jpg",
+    3: "./par_btn.jpg"
+  };
+
+  $("#your_hands").html(
+    '<img src="' + hands_img[your_hands] + '" alt="あなたの手">'
+  );
+
+  $("#pc_hands").html(
+    '<img src="' + hands_img[pc_hands] + '" alt="コンピュータの手">'
+  );
+
+}
+
+
+// =====================================
+// ⑤ 5秒タイマー開始
+// =====================================
+
+function startActionTimer(type){
+
+  // 既存タイマーを停止
+  clearInterval(timer_id);
+
+  // ゲーム状態を設定
+  action_type = type;
+  game_status = "action";
+  time_left = 3;
+
+  // 現在時刻の3秒後を制限時刻に設定
+  action_deadline = Date.now() + 3000;
+
+  $("#timer").html("残り 3 秒");
+
+
+  timer_id = setInterval(function(){
+
+    // 残り時間を計算
+    const remaining = action_deadline - Date.now();
+
+    time_left = Math.max(0, Math.ceil(remaining / 1000));
+
+    $("#timer").html("残り " + time_left + " 秒");
+
+
+    // 時間切れ
+    if(remaining <= 0){
+
+      clearInterval(timer_id);
+
+      handleTimeout();
+
+    }
+
+  }, 100);
+
+}
+
+
+// =====================================
+// ⑥ 時間内にクリックした場合
+// =====================================
+
+// リセット後もクリックできるようにする
+$(document).on("click", "#your_turn", function(){
+
+  // 攻撃・防御できる状態だけ実行
+  if(game_status !== "action"){
+    return;
+  }
+
+  // 制限時間を過ぎていた場合
+  if(Date.now() >= action_deadline){
+
+    clearInterval(timer_id);
+    handleTimeout();
+    return;
+
+  }
+
+  // タイマー停止
+  clearInterval(timer_id);
+
+  game_status = "finished";
+
+
+  // じゃんけんに勝って叩けた場合
+  if(action_type === "win"){
+
+    $(".hit-icon").html(
+      '<img src="./your_win_hummer.png" class="result_img" alt="ハンマー成功">'
+    );
+
+  }
+
+  // じゃんけんに負けてガードできた場合
+  else if(action_type === "lose"){
+
+    $(".hit-icon").html(
+      '<img src="./your_win_helmet.png" class="result_img" alt="ガード成功">'
+    );
+
+  }
+
+  // 成功表示
+  $("#judgment").html("成功！");
+  $("#timer").html("");
+
+});
+
+
+// =====================================
+// ⑦ 時間切れの場合
+// =====================================
+
+function handleTimeout(){
+
+  if(game_status !== "action"){
+    return;
+  }
+
+  game_status = "finished";
+
+  let lose_img = "";
+
+
+  // 勝っていたのにハンマーで叩けなかった場合
+  if(action_type === "win"){
+
+    lose_img = "./your_lose_hummer.png";
+
+  }
+
+  // 負けていてヘルメットで守れなかった場合
+  else if(action_type === "lose"){
+
+    lose_img = "./your_lose_helmet.png";
+
+  }
+
+
+  // 失敗画像を中央に表示
+  $(".hit-icon").html(
+    '<img src="' + lose_img + '" class="result_img" alt="失敗">'
+  );
+
+  // 失敗表示
+  $("#judgment").html("失敗！");
+  $("#timer").html("");
+
+}
+
+
+// =====================================
+// ⑧ もう一度対戦する（リセット）
+// =====================================
+
+$("#reset_btn").on("click", function(){
+
+  // タイマー停止
+  clearInterval(timer_id);
+
+  // 変数の初期化
+  time_left = 3;
+  game_status = "janken";
+  action_type = "";
+  action_deadline = 0;
+
+
+  // じゃんけんの手を初期化
+  $("#your_hands").html(
+    '<img src="./all_btn.jpg" alt="ジャンケン開始">'
+  );
+
+  $("#pc_hands").html(
+    '<img src="./all_btn.jpg" alt="ジャンケン開始">'
+  );
+
+
+  // 判定を初期化
+  $("#judgment").html("");
+
+
+  // ハンマー・ヘルメット表示を初期化
+  $(".hit-icon").html(`
+    <span id="your_turn">
+      <img src="./your_start.png" class="game_img" alt="あなた">
+    </span>
+    <span id="pc_turn">
+      <img src="./pc_start.png" class="game_img" alt="コンピュータ">
+    </span>
+  `);
+
+  // タイマー表示を消す
+  $("#timer").html("");
+
+});
+
+
+console.log("ここまでは正しく処理されています。");
+
+</script>
+
+</body>
+</html>
